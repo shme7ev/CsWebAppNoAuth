@@ -1,0 +1,9 @@
+﻿services:
+  webappnoauth:
+    image: webappnoauth
+    build:
+      context: .
+      dockerfile: WebAppNoAuth/Dockerfile
+    ports:
+      - "8080:8080"
+
