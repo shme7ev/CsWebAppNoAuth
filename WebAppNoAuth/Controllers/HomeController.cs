@@ -8,15 +8,27 @@ namespace WebAppNoAuth.Controllers;
 public class HomeController : Controller
 {
     private readonly IProductService _productService;
+    private readonly IProductServiceEF _productServiceEF;
 
-    public HomeController(IProductService productService)
+    public HomeController(IProductService productService, IProductServiceEF productServiceEF)
     {
         _productService = productService;
+        _productServiceEF = productServiceEF;
     }
+    
     public async Task<IActionResult> Index()
     {
-        var products = await _productService.GetAllProductsAsync();
-        return View(products);
+        var viewModel = new HomeViewModel();
+        
+        // Get products using raw SQL
+        viewModel.RawSqlProducts = await _productService.GetAllProductsAsync();
+        viewModel.RawSqlCount = viewModel.RawSqlProducts.Count;
+        
+        // Get products using Entity Framework
+        viewModel.EntityFrameworkProducts = await _productServiceEF.GetAllProductsAsync();
+        viewModel.EntityFrameworkCount = viewModel.EntityFrameworkProducts.Count;
+        
+        return View(viewModel);
     }
 
     public IActionResult Privacy()

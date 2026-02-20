@@ -1,10 +1,19 @@
+using Microsoft.EntityFrameworkCore;
+
 var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
 builder.Services.AddControllersWithViews();
 
-// Register database service
+// Register database service (raw SQL)
 builder.Services.AddScoped<WebAppNoAuth.Services.IProductService, WebAppNoAuth.Services.ProductService>();
+
+// Register Entity Framework services
+builder.Services.AddDbContext<WebAppNoAuth.Data.ApplicationDbContext>(options =>
+    options.UseNpgsql(builder.Configuration.GetConnectionString("DefaultConnection")));
+
+// Register EF-based product service
+builder.Services.AddScoped<WebAppNoAuth.Services.IProductServiceEF, WebAppNoAuth.Services.ProductServiceEF>();
 
 var app = builder.Build();
 

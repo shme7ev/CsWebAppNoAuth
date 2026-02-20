@@ -1,4 +1,4 @@
-@model List<WebAppNoAuth.Models.Product>
+@model WebAppNoAuth.Models.HomeViewModel
 @{
     ViewData["Title"] = "Products Catalog";
 }
@@ -6,53 +6,166 @@
 <div class="container mt-4">
     <div class="row">
         <div class="col-12">
-            <h1 class="mb-4">Products Catalog</h1>
+            <h1 class="mb-4">Products Catalog - Dual Data Source Comparison</h1>
             
-            @if (Model.Any())
-            {
-                <div class="table-responsive">
-                    <table class="table table-striped table-hover">
-                        <thead class="table-dark">
-                            <tr>
-                                <th>ID</th>
-                                <th>Name</th>
-                                <th>Description</th>
-                                <th>Price</th>
-                                <th>Category</th>
-                                <th>Created Date</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            @foreach (var product in Model)
-                            {
-                                <tr>
-                                    <td>@product.Id</td>
-                                    <td><strong>@product.Name</strong></td>
-                                    <td>@product.Description</td>
-                                    <td>$@product.Price.ToString("F2")</td>
-                                    <td>
-                                        <span class="badge bg-primary">@product.Category</span>
-                                    </td>
-                                    <td>@product.CreatedAt.ToString("MM/dd/yyyy HH:mm")</td>
-                                </tr>
-                            }
-                        </tbody>
-                    </table>
+            <div class="alert alert-info mb-4">
+                <h4 class="alert-heading">Comparison Overview</h4>
+                <p>This page demonstrates two different approaches to retrieving data from the same PostgreSQL database:</p>
+                <ul>
+                    <li><strong>Raw SQL Approach:</strong> Direct database queries using Npgsql</li>
+                    <li><strong>Entity Framework Approach:</strong> ORM-based data access using DbContext</li>
+                </ul>
+                <hr>
+                <p class="mb-0">Both approaches retrieve the same data from the <code>products</code> table.</p>
+            </div>
+            
+            <!-- Raw SQL Approach Section -->
+            <div class="card mb-5">
+                <div class="card-header bg-primary text-white">
+                    <h3 class="mb-0">📋 Raw SQL Approach (Npgsql)</h3>
                 </div>
-                
-                <div class="alert alert-info mt-3">
-                    <strong>Total Products:</strong> @Model.Count
+                <div class="card-body">
+                    @if (Model.RawSqlProducts.Any())
+                    {
+                        <div class="table-responsive">
+                            <table class="table table-striped table-hover">
+                                <thead class="table-dark">
+                                    <tr>
+                                        <th>ID</th>
+                                        <th>Name</th>
+                                        <th>Description</th>
+                                        <th>Price</th>
+                                        <th>Category</th>
+                                        <th>Created Date</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    @foreach (var product in Model.RawSqlProducts)
+                                    {
+                                        <tr>
+                                            <td>@product.Id</td>
+                                            <td><strong>@product.Name</strong></td>
+                                            <td>@product.Description</td>
+                                            <td>$@product.Price.ToString("F2")</td>
+                                            <td>
+                                                <span class="badge bg-primary">@product.Category</span>
+                                            </td>
+                                            <td>@product.CreatedAt.ToString("MM/dd/yyyy HH:mm")</td>
+                                        </tr>
+                                    }
+                                </tbody>
+                            </table>
+                        </div>
+                        
+                        <div class="alert alert-success mt-3">
+                            <strong>Total Products (Raw SQL):</strong> @Model.RawSqlCount
+                        </div>
+                    }
+                    else
+                    {
+                        <div class="alert alert-warning" role="alert">
+                            <h4 class="alert-heading">No Products Found (Raw SQL)</h4>
+                            <p>No products retrieved using raw SQL approach.</p>
+                        </div>
+                    }
                 </div>
-            }
-            else
-            {
-                <div class="alert alert-warning" role="alert">
-                    <h4 class="alert-heading">No Products Found</h4>
-                    <p>No products are available in the database. Please make sure PostgreSQL is running and the database is initialized.</p>
-                    <hr>
-                    <p class="mb-0">Run the init-database.sql script to create the required table and sample data.</p>
+            </div>
+
+            <!-- Entity Framework Approach Section -->
+            <div class="card mb-5">
+                <div class="card-header bg-success text-white">
+                    <h3 class="mb-0">📊 Entity Framework Approach (DbContext)</h3>
                 </div>
-            }
+                <div class="card-body">
+                    @if (Model.EntityFrameworkProducts.Any())
+                    {
+                        <div class="table-responsive">
+                            <table class="table table-striped table-hover">
+                                <thead class="table-dark">
+                                    <tr>
+                                        <th>ID</th>
+                                        <th>Name</th>
+                                        <th>Description</th>
+                                        <th>Price</th>
+                                        <th>Category</th>
+                                        <th>Created Date</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    @foreach (var product in Model.EntityFrameworkProducts)
+                                    {
+                                        <tr>
+                                            <td>@product.Id</td>
+                                            <td><strong>@product.Name</strong></td>
+                                            <td>@product.Description</td>
+                                            <td>$@product.Price.ToString("F2")</td>
+                                            <td>
+                                                <span class="badge bg-success">@product.Category</span>
+                                            </td>
+                                            <td>@product.CreatedAt.ToString("MM/dd/yyyy HH:mm")</td>
+                                        </tr>
+                                    }
+                                </tbody>
+                            </table>
+                        </div>
+                        
+                        <div class="alert alert-success mt-3">
+                            <strong>Total Products (Entity Framework):</strong> @Model.EntityFrameworkCount
+                        </div>
+                    }
+                    else
+                    {
+                        <div class="alert alert-warning" role="alert">
+                            <h4 class="alert-heading">No Products Found (Entity Framework)</h4>
+                            <p>No products retrieved using Entity Framework approach.</p>
+                        </div>
+                    }
+                </div>
+            </div>
+
+            <!-- Comparison Summary -->
+            <div class="card">
+                <div class="card-header bg-info text-white">
+                    <h3 class="mb-0">Comparison Summary</h3>
+                </div>
+                <div class="card-body">
+                    <div class="row">
+                        <div class="col-md-6">
+                            <div class="alert alert-primary">
+                                <h5>Raw SQL Approach</h5>
+                                <p><strong>Products Count:</strong> @Model.RawSqlCount</p>
+                                <p><strong>Method:</strong> Direct Npgsql queries</p>
+                                <p><strong>Advantages:</strong> Full control, performance tuning</p>
+                                <p><strong>Disadvantages:</strong>need connection pool, caching</p>
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <div class="alert alert-success">
+                                <h5>Entity Framework Approach</h5>
+                                <p><strong>Products Count:</strong> @Model.EntityFrameworkCount</p>
+                                <p><strong>Method:</strong> ORM with DbContext</p>
+                                <p><strong>Advantages:</strong> Type safety, LINQ queries, caching?, connection pooling?</p>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    @if (Model.RawSqlCount == Model.EntityFrameworkCount && Model.RawSqlCount > 0)
+                    {
+                        <div class="alert alert-success text-center">
+                            <h4>Both approaches returned the same data!</h4>
+                            <p>Successfully demonstrated dual data access methods retrieving identical results.</p>
+                        </div>
+                    }
+                    else if (Model.RawSqlCount != Model.EntityFrameworkCount)
+                    {
+                        <div class="alert alert-warning text-center">
+                            <h4>⚠️ Data mismatch detected!</h4>
+                            <p>The two approaches returned different counts. Please check the database connections.</p>
+                        </div>
+                    }
+                </div>
+            </div>
+
         </div>
     </div>
 </div>
