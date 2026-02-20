@@ -3,6 +3,9 @@ var builder = WebApplication.CreateBuilder(args);
 // Add services to the container.
 builder.Services.AddControllersWithViews();
 
+// Register database service
+builder.Services.AddScoped<WebAppNoAuth.Services.IProductService, WebAppNoAuth.Services.ProductService>();
+
 var app = builder.Build();
 
 // Configure the HTTP request pipeline.
