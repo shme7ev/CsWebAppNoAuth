@@ -54,8 +54,9 @@ dotnet build
 ```bash
 cd WebAppNoAuth
 
-dotnet run
+dotnet watch run
 ```
+Option watch gives hot reload
 
 4. Open your browser and navigate to `https://localhost:5033`
 5. You can also run it in docker with 
@@ -98,3 +99,7 @@ Update this string according to your PostgreSQL configuration.
 ## Known Issues
 
 - Bootstrap and jQuery are not loaded as dependencies
+- Need connection pool - is it needed with DbContext?
+- LINQ usage
+- authentification
+- authorization

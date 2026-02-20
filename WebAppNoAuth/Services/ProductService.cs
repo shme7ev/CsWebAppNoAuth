@@ -23,7 +23,8 @@ public class ProductService : IProductService
     public async Task<List<Product>> GetAllProductsAsync()
     {
         var products = new List<Product>();
-        
+
+        // TODO use connection pool ? or DbContext
         using var connection = new NpgsqlConnection(_connectionString);
         await connection.OpenAsync();
         
@@ -35,15 +36,7 @@ public class ProductService : IProductService
         
         while (await reader.ReadAsync())
         {
-            products.Add(new Product
-            {
-                Id = reader.GetInt32(0),
-                Name = reader.GetString(1),
-                Description = reader.IsDBNull(2) ? string.Empty : reader.GetString(2),
-                Price = reader.GetDecimal(3),
-                Category = reader.IsDBNull(4) ? string.Empty : reader.GetString(4),
-                CreatedAt = reader.GetDateTime(5)
-            });
+            products.Add(Product(reader));
         }
         
         return products;
@@ -64,18 +57,23 @@ public class ProductService : IProductService
         
         if (await reader.ReadAsync())
         {
-            return new Product
-            {
-                Id = reader.GetInt32(0),
-                Name = reader.GetString(1),
-                Description = reader.IsDBNull(2) ? string.Empty : reader.GetString(2),
-                Price = reader.GetDecimal(3),
-                Category = reader.IsDBNull(4) ? string.Empty : reader.GetString(4),
-                CreatedAt = reader.GetDateTime(5)
-            };
+            return Product(reader);
         }
         
         return null;
+    }
+
+    private static Product Product(NpgsqlDataReader reader)
+    {
+        return new Product
+        {
+            Id = reader.GetInt32(0),
+            Name = reader.GetString(1),
+            Description = reader.IsDBNull(2) ? string.Empty : reader.GetString(2),
+            Price = reader.GetDecimal(3),
+            Category = reader.IsDBNull(4) ? string.Empty : reader.GetString(4),
+            CreatedAt = reader.GetDateTime(5)
+        };
     }
 
     public async Task<List<Product>> GetProductsByCategoryAsync(string category)
@@ -95,15 +93,7 @@ public class ProductService : IProductService
         
         while (await reader.ReadAsync())
         {
-            products.Add(new Product
-            {
-                Id = reader.GetInt32(0),
-                Name = reader.GetString(1),
-                Description = reader.IsDBNull(2) ? string.Empty : reader.GetString(2),
-                Price = reader.GetDecimal(3),
-                Category = reader.GetString(4),
-                CreatedAt = reader.GetDateTime(5)
-            });
+            products.Add(Product(reader));
         }
         
         return products;
