@@ -1,36 +1,28 @@
 @model WebAppNoAuth.Models.HomeViewModel
 @{
-    ViewData["Title"] = "Products Catalog";
+    ViewData["Title"] = "Admin Dashboard";
 }
 
 <div class="container mt-4">
     <div class="row">
         <div class="col-12">
-            <div class="alert alert-warning mb-4 text-center">
-                <h3>🔐 Protected Admin Section Available</h3>
-                <p class="mb-2">Access the authenticated admin dashboard to see JWT token protection in action!</p>
-                <a href="@Url.Action("Login", "Admin")" class="btn btn-warning btn-lg">
-                    🔐 Access Admin Dashboard
-                </a>
-            </div>
-            
-            <h1 class="mb-4">Products Catalog - Dual Data Source Comparison</h1>
-            
-            <div class="alert alert-info mb-4">
-                <h4 class="alert-heading">Comparison Overview</h4>
-                <p>This page demonstrates two different approaches to retrieving data from the same PostgreSQL database:</p>
-                <ul>
-                    <li><strong>Raw SQL Approach:</strong> Direct database queries using Npgsql</li>
-                    <li><strong>Entity Framework Approach:</strong> ORM-based data access using DbContext</li>
-                </ul>
+            <div class="alert alert-success mb-4">
+                <h2>🛡️ Admin Dashboard</h2>
+                <p class="mb-0">@ViewBag.Message</p>
                 <hr>
-                <p class="mb-0">Both approaches retrieve the same data from the <code>products</code> table.</p>
+                <p class="mb-0"><strong>Authenticated User:</strong> @ViewBag.Username</p>
             </div>
-            
+
+            <div class="alert alert-info mb-4">
+                <h4 class="alert-heading">🔒 Protected Content</h4>
+                <p>This page requires valid JWT authentication to access. You can see the same product data as the home page, but this section is restricted to authenticated users only.</p>
+                <p class="mb-0">JWT Token Status: <span class="badge bg-success">✅ Authenticated</span></p>
+            </div>
+
             <!-- Raw SQL Approach Section -->
             <div class="card mb-5">
                 <div class="card-header bg-primary text-white">
-                    <h3 class="mb-0">📋 Raw SQL Approach (Npgsql)</h3>
+                    <h3 class="mb-0">📋 Admin - Raw SQL Approach (Npgsql)</h3>
                 </div>
                 <div class="card-body">
                     @if (Model.RawSqlProducts.Any())
@@ -82,7 +74,7 @@
             <!-- Entity Framework Approach Section -->
             <div class="card mb-5">
                 <div class="card-header bg-success text-white">
-                    <h3 class="mb-0">📊 Entity Framework Approach (DbContext)</h3>
+                    <h3 class="mb-0">📊 Admin - Entity Framework Approach (DbContext)</h3>
                 </div>
                 <div class="card-body">
                     @if (Model.EntityFrameworkProducts.Any())
@@ -131,49 +123,34 @@
                 </div>
             </div>
 
-            <!-- Comparison Summary -->
+            <!-- Admin Actions -->
             <div class="card">
-                <div class="card-header bg-info text-white">
-                    <h3 class="mb-0">Comparison Summary</h3>
+                <div class="card-header bg-warning text-dark">
+                    <h3 class="mb-0">🔧 Admin Actions</h3>
                 </div>
                 <div class="card-body">
                     <div class="row">
-                        <div class="col-md-6">
-                            <div class="alert alert-primary">
-                                <h5>Raw SQL Approach</h5>
-                                <p><strong>Products Count:</strong> @Model.RawSqlCount</p>
-                                <p><strong>Method:</strong> Direct Npgsql queries</p>
-                                <p><strong>Advantages:</strong> Full control, performance tuning</p>
-                                <p><strong>Disadvantages:</strong>need connection pool, caching</p>
-                            </div>
+                        <div class="col-md-6 mb-3">
+                            <a href="@Url.Action("Dashboard", "Admin")" class="btn btn-warning btn-lg w-100">
+                                Advanced Dashboard
+                            </a>
+                            <small class="text-muted">View advanced administrative features</small>
                         </div>
-                        <div class="col-md-6">
-                            <div class="alert alert-success">
-                                <h5>Entity Framework Approach</h5>
-                                <p><strong>Products Count:</strong> @Model.EntityFrameworkCount</p>
-                                <p><strong>Method:</strong> ORM with DbContext</p>
-                                <p><strong>Advantages:</strong> Type safety, LINQ queries, caching?, connection pooling?</p>
-                            </div>
+                        <div class="col-md-6 mb-3">
+                            <a href="@Url.Action("Login", "Admin")" class="btn btn-info btn-lg w-100">
+                                Generate New Token
+                            </a>
+                            <small class="text-muted">Create a new JWT token for testing</small>
                         </div>
                     </div>
                     
-                    @if (Model.RawSqlCount == Model.EntityFrameworkCount && Model.RawSqlCount > 0)
-                    {
-                        <div class="alert alert-success text-center">
-                            <h4>Both approaches returned the same data!</h4>
-                            <p>Successfully demonstrated dual data access methods retrieving identical results.</p>
-                        </div>
-                    }
-                    else if (Model.RawSqlCount != Model.EntityFrameworkCount)
-                    {
-                        <div class="alert alert-warning text-center">
-                            <h4>⚠️ Data mismatch detected!</h4>
-                            <p>The two approaches returned different counts. Please check the database connections.</p>
-                        </div>
-                    }
+                    <div class="mt-4">
+                        <a href="@Url.Action("Index", "Home")" class="btn btn-secondary">
+                            Back to Public Home
+                        </a>
+                    </div>
                 </div>
             </div>
-
         </div>
     </div>
 </div>

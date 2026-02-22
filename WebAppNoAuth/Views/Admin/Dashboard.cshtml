@@ -1,0 +1,153 @@
+@{
+    ViewData["Title"] = "Admin Advanced Dashboard";
+}
+
+<div class="container mt-4">
+    <div class="row">
+        <div class="col-12">
+            <div class="alert alert-warning mb-4">
+                <h2>Advanced Admin Dashboard</h2>
+                <p class="mb-0">@ViewBag.Message</p>
+                <hr>
+                <p class="mb-0"><strong>Administrator:</strong> @ViewBag.Username</p>
+            </div>
+
+            <div class="alert alert-info">
+                <h4 class="alert-heading">Secure Administrative Zone</h4>
+                <p>You have successfully accessed the advanced administrative dashboard. This area contains privileged operations and sensitive data that require proper authentication.</p>
+                <p class="mb-0">Security Level: <span class="badge bg-danger">High</span></p>
+            </div>
+
+            <!-- Stats Cards -->
+            <div class="row mb-4">
+                <div class="col-md-3 mb-3">
+                    <div class="card text-center">
+                        <div class="card-body">
+                            <h3 class="card-title text-primary">24</h3>
+                            <p class="card-text">Active Users</p>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-3 mb-3">
+                    <div class="card text-center">
+                        <div class="card-body">
+                            <h3 class="card-title text-success">156</h3>
+                            <p class="card-text">Total Products</p>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-3 mb-3">
+                    <div class="card text-center">
+                        <div class="card-body">
+                            <h3 class="card-title text-warning">8</h3>
+                            <p class="card-text">Pending Orders</p>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-3 mb-3">
+                    <div class="card text-center">
+                        <div class="card-body">
+                            <h3 class="card-title text-info">$12,450</h3>
+                            <p class="card-text">Today's Revenue</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Admin Tools -->
+            <div class="row">
+                <div class="col-md-6">
+                    <div class="card">
+                        <div class="card-header bg-dark text-white">
+                            <h5 class="mb-0">🔧 Management Tools</h5>
+                        </div>
+                        <div class="card-body">
+                            <ul class="list-group list-group-flush">
+                                <li class="list-group-item d-flex justify-content-between align-items-center">
+                                    User Management
+                                    <span class="badge bg-primary rounded-pill">Coming Soon</span>
+                                </li>
+                                <li class="list-group-item d-flex justify-content-between align-items-center">
+                                    Product Catalog
+                                    <span class="badge bg-success rounded-pill">Active</span>
+                                </li>
+                                <li class="list-group-item d-flex justify-content-between align-items-center">
+                                    Order Processing
+                                    <span class="badge bg-warning rounded-pill">In Progress</span>
+                                </li>
+                                <li class="list-group-item d-flex justify-content-between align-items-center">
+                                    Analytics Reports
+                                    <span class="badge bg-info rounded-pill">Beta</span>
+                                </li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="col-md-6">
+                    <div class="card">
+                        <div class="card-header bg-secondary text-white">
+                            <h5 class="mb-0">🛡️ Security Information</h5>
+                        </div>
+                        <div class="card-body">
+                            <div class="mb-3">
+                                <strong>Authentication Status:</strong>
+                                <span class="badge bg-success ms-2">Authenticated</span>
+                            </div>
+                            <div class="mb-3">
+                                <strong>Token Expiry:</strong>
+                                <span class="text-muted">@DateTime.Now.AddHours(1).ToString("HH:mm dd/MM/yyyy")</span>
+                            </div>
+                            <div class="mb-3">
+                                <strong>User Role:</strong>
+                                <span class="badge bg-primary">Administrator</span>
+                            </div>
+                            <div>
+                                <strong>Last Login:</strong>
+                                <span class="text-muted">@DateTime.Now.ToString("HH:mm dd/MM/yyyy")</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Action Buttons -->
+            <div class="card mt-4">
+                <div class="card-header bg-info text-white">
+                    <h5 class="mb-0">⚡ Quick Actions</h5>
+                </div>
+                <div class="card-body">
+                    <div class="row">
+                        <div class="col-md-4 mb-2">
+                            <button class="btn btn-outline-primary w-100" disabled>
+                                📈 View Analytics
+                            </button>
+                        </div>
+                        <div class="col-md-4 mb-2">
+                            <button class="btn btn-outline-success w-100" disabled>
+                                Add New Product
+                            </button>
+                        </div>
+                        <div class="col-md-4 mb-2">
+                            <button class="btn btn-outline-warning w-100" disabled>
+                                Manage Orders
+                            </button>
+                        </div>
+                    </div>
+                    <div class="row mt-2">
+                        <div class="col-md-6 mb-2">
+                            <a href="@Url.Action("Index", "Admin")" class="btn btn-primary w-100">
+                                Back to Admin Home
+                            </a>
+                        </div>
+                        <div class="col-md-6 mb-2">
+                            <a href="@Url.Action("Index", "Home")" class="btn btn-secondary w-100">
+                                Public Site
+                            </a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

@@ -100,6 +100,5 @@ Update this string according to your PostgreSQL configuration.
 
 - Bootstrap and jQuery are not loaded as dependencies
 - Need connection pool - is it needed with DbContext?
-- LINQ usage
-- authentification
+- authentification - jwt key needs to be moved somewhere else!
 - authorization
