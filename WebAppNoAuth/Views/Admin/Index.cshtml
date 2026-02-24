@@ -14,15 +14,15 @@
             </div>
 
             <div class="alert alert-info mb-4">
-                <h4 class="alert-heading">🔒 Protected Content</h4>
+                <h4 class="alert-heading">Protected Content</h4>
                 <p>This page requires valid JWT authentication to access. You can see the same product data as the home page, but this section is restricted to authenticated users only.</p>
-                <p class="mb-0">JWT Token Status: <span class="badge bg-success">✅ Authenticated</span></p>
+                <p class="mb-0">JWT Token Status: <span class="badge bg-success">Authenticated</span></p>
             </div>
 
             <!-- Raw SQL Approach Section -->
             <div class="card mb-5">
                 <div class="card-header bg-primary text-white">
-                    <h3 class="mb-0">📋 Admin - Raw SQL Approach (Npgsql)</h3>
+                    <h3 class="mb-0">Admin - Raw SQL Approach (Npgsql)</h3>
                 </div>
                 <div class="card-body">
                     @if (Model.RawSqlProducts.Any())
@@ -74,7 +74,7 @@
             <!-- Entity Framework Approach Section -->
             <div class="card mb-5">
                 <div class="card-header bg-success text-white">
-                    <h3 class="mb-0">📊 Admin - Entity Framework Approach (DbContext)</h3>
+                    <h3 class="mb-0">Admin - Entity Framework Approach (DbContext)</h3>
                 </div>
                 <div class="card-body">
                     @if (Model.EntityFrameworkProducts.Any())
@@ -123,34 +123,6 @@
                 </div>
             </div>
 
-            <!-- Admin Actions -->
-            <div class="card">
-                <div class="card-header bg-warning text-dark">
-                    <h3 class="mb-0">🔧 Admin Actions</h3>
-                </div>
-                <div class="card-body">
-                    <div class="row">
-                        <div class="col-md-6 mb-3">
-                            <a href="@Url.Action("Dashboard", "Admin")" class="btn btn-warning btn-lg w-100">
-                                Advanced Dashboard
-                            </a>
-                            <small class="text-muted">View advanced administrative features</small>
-                        </div>
-                        <div class="col-md-6 mb-3">
-                            <a href="@Url.Action("Login", "Admin")" class="btn btn-info btn-lg w-100">
-                                Generate New Token
-                            </a>
-                            <small class="text-muted">Create a new JWT token for testing</small>
-                        </div>
-                    </div>
-                    
-                    <div class="mt-4">
-                        <a href="@Url.Action("Index", "Home")" class="btn btn-secondary">
-                            Back to Public Home
-                        </a>
-                    </div>
-                </div>
-            </div>
         </div>
     </div>
 </div>

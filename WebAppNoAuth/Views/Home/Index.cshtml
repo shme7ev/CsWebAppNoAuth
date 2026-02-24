@@ -6,13 +6,6 @@
 <div class="container mt-4">
     <div class="row">
         <div class="col-12">
-            <div class="alert alert-warning mb-4 text-center">
-                <h3>🔐 Protected Admin Section Available</h3>
-                <p class="mb-2">Access the authenticated admin dashboard to see JWT token protection in action!</p>
-                <a href="@Url.Action("Login", "Admin")" class="btn btn-warning btn-lg">
-                    🔐 Access Admin Dashboard
-                </a>
-            </div>
             
             <h1 class="mb-4">Products Catalog - Dual Data Source Comparison</h1>
             
@@ -30,7 +23,7 @@
             <!-- Raw SQL Approach Section -->
             <div class="card mb-5">
                 <div class="card-header bg-primary text-white">
-                    <h3 class="mb-0">📋 Raw SQL Approach (Npgsql)</h3>
+                    <h3 class="mb-0">Raw SQL Approach (Npgsql)</h3>
                 </div>
                 <div class="card-body">
                     @if (Model.RawSqlProducts.Any())
@@ -82,7 +75,7 @@
             <!-- Entity Framework Approach Section -->
             <div class="card mb-5">
                 <div class="card-header bg-success text-white">
-                    <h3 class="mb-0">📊 Entity Framework Approach (DbContext)</h3>
+                    <h3 class="mb-0">Entity Framework Approach (DbContext)</h3>
                 </div>
                 <div class="card-body">
                     @if (Model.EntityFrameworkProducts.Any())
@@ -167,7 +160,7 @@
                     else if (Model.RawSqlCount != Model.EntityFrameworkCount)
                     {
                         <div class="alert alert-warning text-center">
-                            <h4>⚠️ Data mismatch detected!</h4>
+                            <h4>Data mismatch detected!</h4>
                             <p>The two approaches returned different counts. Please check the database connections.</p>
                         </div>
                     }

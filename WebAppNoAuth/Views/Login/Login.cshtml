@@ -7,7 +7,7 @@
         <div class="col-md-6">
             <div class="card shadow">
                 <div class="card-header bg-primary text-white text-center">
-                    <h3 class="mb-0">Admin Login</h3>
+                    <h3 class="mb-0">Admin Login - Generate Token</h3>
                 </div>
                 <div class="card-body">
                     @if (ViewBag.Success != null)
@@ -19,16 +19,6 @@
                             <div class="mt-3">
                                 <label class="form-label"><strong>Your JWT Token:</strong></label>
                                 <textarea class="form-control" rows="4" readonly onclick="this.select()">@ViewBag.Token</textarea>
-                                <div class="form-text">Click to select the token, then copy it for API requests.</div>
-                                
-                                <div class="mt-3">
-                                    <button class="btn btn-success" onclick="copyToken()">
-                                        Copy Token
-                                    </button>
-                                    <a href="@Url.Action("Index", "Admin")" class="btn btn-primary">
-                                        Access Admin Dashboard
-                                    </a>
-                                </div>
                             </div>
                         </div>
                     }
@@ -93,22 +83,3 @@
     </div>
 </div>
 
-<script>
-function copyToken() {
-    const tokenArea = document.querySelector('textarea');
-    tokenArea.select();
-    document.execCommand('copy');
-    
-    const button = event.target;
-    const originalText = button.innerHTML;
-    button.innerHTML = 'Copied!';
-    button.classList.remove('btn-success');
-    button.classList.add('btn-secondary');
-    
-    setTimeout(() => {
-        button.innerHTML = originalText;
-        button.classList.remove('btn-secondary');
-        button.classList.add('btn-success');
-    }, 2000);
-}
-</script>
