@@ -3,7 +3,6 @@ using Microsoft.EntityFrameworkCore;
 
 var builder = WebApplication.CreateBuilder(args);
 
-// Add services to the container.
 builder.Services.AddControllersWithViews();
 builder.Services.AddSwaggerGen();
 
@@ -20,6 +19,31 @@ builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
             ValidAudience = builder.Configuration["Jwt:Audience"],
             IssuerSigningKey = new Microsoft.IdentityModel.Tokens.SymmetricSecurityKey(
                 System.Text.Encoding.UTF8.GetBytes(builder.Configuration["Jwt:Key"]!))
+        };
+        
+        // Add custom event to enrich claims with user roles
+        options.Events = new JwtBearerEvents
+        {
+            OnTokenValidated = async context =>
+            {
+                var userService = context.HttpContext.RequestServices.GetRequiredService<WebAppNoAuth.Services.IUserService>();
+                var username = context.Principal?.Identity?.Name;
+                
+                if (!string.IsNullOrEmpty(username))
+                {
+                    var user = await userService.GetUserByUsernameAsync(username);
+                    if (user != null)
+                    {
+                        var claims = new List<System.Security.Claims.Claim>
+                        {
+                            new(System.Security.Claims.ClaimTypes.Role, user.Role)
+                        };
+                        
+                        var appIdentity = new System.Security.Claims.ClaimsIdentity(claims);
+                        context.Principal?.AddIdentity(appIdentity);
+                    }
+                }
+            }
         };
     });
 

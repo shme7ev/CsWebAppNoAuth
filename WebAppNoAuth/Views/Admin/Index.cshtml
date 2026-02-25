@@ -11,12 +11,82 @@
                 <p class="mb-0">@ViewBag.Message</p>
                 <hr>
                 <p class="mb-0"><strong>Authenticated User:</strong> @ViewBag.Username</p>
+                <p class="mb-0"><strong>Role:</strong> 
+                    <span class="badge @(ViewBag.UserRole == "Admin" ? "bg-danger" : 
+                                      ViewBag.UserRole == "Manager" ? "bg-warning" : 
+                                      "bg-secondary")">
+                        @ViewBag.UserRole
+                    </span>
+                </p>
             </div>
 
             <div class="alert alert-info mb-4">
                 <h4 class="alert-heading">Protected Content</h4>
                 <p>This page requires valid JWT authentication to access. You can see the same product data as the home page, but this section is restricted to authenticated users only.</p>
                 <p class="mb-0">JWT Token Status: <span class="badge bg-success">Authenticated</span></p>
+            </div>
+
+            <!-- Navigation Cards -->
+            <div class="row mb-4">
+                <div class="col-md-4 mb-3">
+                    <div class="card h-100 border-primary">
+                        <div class="card-body text-center">
+                            <h5 class="card-title">My Profile</h5>
+                            <p class="card-text">View your user profile and access level information.</p>
+                            <a href="@Url.Action("Profile", "Admin")" class="btn btn-primary">View Profile</a>
+                        </div>
+                    </div>
+                </div>
+                
+                @if (ViewBag.UserRole == "Admin" || ViewBag.UserRole == "Manager")
+                {
+                    <div class="col-md-4 mb-3">
+                        <div class="card h-100 border-secondary">
+                            <div class="card-body text-center">
+                                <h5 class="card-title">📊 Reports</h5>
+                                <p class="card-text">Access reporting dashboard with user statistics.</p>
+                                <a href="@Url.Action("Reports", "Admin")" class="btn btn-secondary">View Reports</a>
+                            </div>
+                        </div>
+                    </div>
+                }
+                
+                @if (ViewBag.UserRole == "Admin")
+                {
+                    <div class="col-md-4 mb-3">
+                        <div class="card h-100 border-success">
+                            <div class="card-body text-center">
+                                <h5 class="card-title">User Management</h5>
+                                <p class="card-text">Manage all system users and their roles.</p>
+                                <a href="@Url.Action("UserManager", "Admin")" class="btn btn-success">Manage Users</a>
+                            </div>
+                        </div>
+                    </div>
+                }
+            </div>
+
+            <div class="alert alert-light mb-4">
+                <h4 class="alert-heading">Available Admin Functions</h4>
+                <p>Based on your role (<strong>@ViewBag.UserRole</strong>), you have access to the following functions:</p>
+                <ul>
+                    <li> <strong>Profile View</strong> - Available to all authenticated users</li>
+                    @if (ViewBag.UserRole == "Admin" || ViewBag.UserRole == "Manager")
+                    {
+                        <li> <strong>Reports Dashboard</strong> - Available to Admin and Managers</li>
+                    }
+                    else
+                    {
+                        <li> <strong>Reports Dashboard</strong> - Requires Admin or Manager role</li>
+                    }
+                    @if (ViewBag.UserRole == "Admin")
+                    {
+                        <li> <strong>User Management</strong> - Available to Admin only</li>
+                    }
+                    else
+                    {
+                        <li> <strong>User Management</strong> - Requires Admin role</li>
+                    }
+                </ul>
             </div>
 
             <!-- Raw SQL Approach Section -->

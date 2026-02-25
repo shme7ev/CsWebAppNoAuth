@@ -7,10 +7,10 @@ public class UserService : IUserService
     private static readonly List<AuthUser> _users = new()
     {
         new AuthUser("admin", "admin@company.com", "Headquarters", "IT", "Admin"),
-        new AuthUser("john_doe", "john.doe@company.com", "New York", "Sales", "User"),
-        new AuthUser("jane_smith", "jane.smith@company.com", "London", "Marketing", "Manager"),
-        new AuthUser("bob_wilson", "bob.wilson@company.com", "Tokyo", "Engineering", "Developer"),
-        new AuthUser("alice_brown", "alice.brown@company.com", "Sydney", "HR", "User")
+        new AuthUser("user", "john.doe@company.com", "New York", "Sales", "User"),
+        new AuthUser("manager", "jane.smith@company.com", "London", "Marketing", "Manager"),
+        new AuthUser("developer", "bob.wilson@company.com", "Tokyo", "Engineering", "Developer"),
+        new AuthUser("hr", "alice.brown@company.com", "Sydney", "HR", "HR")
     };
 
     public async Task<AuthUser?> GetUserByUsernameAsync(string username)

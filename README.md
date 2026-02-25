@@ -96,7 +96,7 @@ Host=localhost;Port=5432;Database=webapp_db;Username=postgres;Password=postgres
 
 Update this string according to your PostgreSQL configuration.
 
-Added UserController to access user list maintained in memory
+## Added UserController to access user list maintained in memory
 - Get all users:
 ```
 curl -s http://localhost:5033/api/user | jq
@@ -115,11 +115,11 @@ curl -s -X POST http://localhost:5033/api/user -H "Content-Type: application/jso
 ./jwt.sh username resource_url token_url
 ```
 
+## AdminController uses role authorization based on AuthUser.Role obtained through AuthUser.Username in JWT token
+
 ## Known Issues
 
 - Bootstrap and jQuery are not loaded as dependencies
 - connection pool - replace DbContext with DbContextPool
 - authentification - jwt info needs to be moved to Secret Manager !
 - db login info needs to be moved to Secret Manager !
-
-- authorization

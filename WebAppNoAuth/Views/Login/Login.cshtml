@@ -4,17 +4,18 @@
 
 <div class="container mt-5">
     <div class="row justify-content-center">
-        <div class="col-md-6">
+        <div class="col-md-8">
             <div class="card shadow">
                 <div class="card-header bg-primary text-white text-center">
                     <h3 class="mb-0">Admin Login - Generate Token</h3>
                 </div>
                 <div class="card-body">
-                    @if (ViewBag.Success != null)
+                    @if (ViewBag.Message != null)
                     {
                         <div class="alert alert-success">
-                            <h4 class="alert-heading">@ViewBag.Success</h4>
+                            <h4 class="alert-heading">@ViewBag.Message</h4>
                             <p><strong>Username:</strong> @ViewBag.Username</p>
+                            <p><strong>Role:</strong> <span class="badge @(ViewBag.Role == "Admin" ? "bg-danger" : ViewBag.Role == "Manager" ? "bg-warning" : "bg-secondary")">@ViewBag.Role</span></p>
                             
                             <div class="mt-3">
                                 <label class="form-label"><strong>Your JWT Token:</strong></label>
@@ -33,19 +34,29 @@
                     {
                         <div class="alert alert-info">
                             <h4 class="alert-heading">Welcome to Admin Portal</h4>
-                            <p>Enter your username to generate a JWT token for accessing protected admin areas.</p>
+                            <p>Enter a valid username to generate a JWT token with appropriate role-based access.</p>
                             <hr>
-                            <p class="mb-0"><strong>Note:</strong> This is a demo system - any username will work.</p>
+                            <p class="mb-0"><strong>Available default users:</strong></p>
+                            <ul class="mb-0">
+                                <li><strong>admin</strong> - Full administrative access</li>
+                                <li><strong>manager</strong> - Manager access</li>
+                                <li><strong>user</strong> - Standard user access</li>
+                                <li><strong>developer</strong> - Developer access</li>
+                                <li><strong>hr</strong> - HR access</li>
+                            </ul>
+
+                            <p class="mb-0"><strong>You can create your own user (in-memory, not persisted) thru UserController</strong></p>
+
                         </div>
                     }
 
-                    @if (ViewBag.Success == null)
+                    @if (ViewBag.Message == null)
                     {
-                        <form method="post" class="mt-4">
+                        <form method="post" asp-action="GenerateToken" asp-controller="Admin" class="mt-4">
                             <div class="mb-3">
                                 <label for="username" class="form-label">Username</label>
-                                <input type="text" class="form-control" id="username" name="username" placeholder="Enter your username" required>
-                                <div class="form-text">Any username works in this demo environment.</div>
+                                <input type="text" class="form-control" id="username" name="username" placeholder="Enter username (e.g., admin)" required>
+                                <div class="form-text">Enter username.</div>
                             </div>
                             
                             <div class="d-grid gap-2">
@@ -66,7 +77,12 @@
                                     <li>Copy the JWT token above</li>
                                     <li>Add it to your HTTP requests in the Authorization header</li>
                                     <li>Format: <code>Bearer YOUR_TOKEN_HERE</code></li>
-                                    <li>Or click "Access Admin Dashboard" to test in browser</li>
+                                    <li>Test different admin endpoints based on your role:</li>
+                                    <ul>
+                                        <li><strong>All authenticated users:</strong> /Admin/Profile</li>
+                                        <li><strong>Admin & Managers:</strong> /Admin/Reports</li>
+                                        <li><strong>Admin only:</strong> /Admin/UserManager</li>
+                                    </ul>
                                 </ol>
                                 
                                 <div class="mt-3">

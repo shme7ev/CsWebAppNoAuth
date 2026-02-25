@@ -1,0 +1,104 @@
+@model WebAppNoAuth.Models.AuthUser
+@{
+    ViewData["Title"] = "User Profile";
+}
+
+<div class="container mt-4">
+    <div class="row">
+        <div class="col-12">
+            <h1 class="display-4">@ViewBag.Message</h1>
+            <div class="alert alert-info">
+                <strong>Current User:</strong> @ViewBag.Username<br>
+                <strong>Role:</strong> @ViewBag.UserRole
+            </div>
+            
+            @if (Model != null)
+            {
+                <div class="card">
+                    <div class="card-header">
+                        <h3>Profile Information</h3>
+                    </div>
+                    <div class="card-body">
+                        <div class="row">
+                            <div class="col-md-6">
+                                <dl class="row">
+                                    <dt class="col-sm-4">Username:</dt>
+                                    <dd class="col-sm-8">@Model.Username</dd>
+                                    
+                                    <dt class="col-sm-4">Email:</dt>
+                                    <dd class="col-sm-8">@Model.Email</dd>
+                                    
+                                    <dt class="col-sm-4">Role:</dt>
+                                    <dd class="col-sm-8">
+                                        <span class="badge @(Model.Role == "Admin" ? "bg-danger" : 
+                                                           Model.Role == "Manager" ? "bg-warning" : 
+                                                           "bg-secondary")">
+                                            @Model.Role
+                                        </span>
+                                    </dd>
+                                </dl>
+                            </div>
+                            <div class="col-md-6">
+                                <dl class="row">
+                                    <dt class="col-sm-4">Location:</dt>
+                                    <dd class="col-sm-8">@Model.Location</dd>
+                                    
+                                    <dt class="col-sm-4">Department:</dt>
+                                    <dd class="col-sm-8">@Model.Department</dd>
+                                    
+                                    <dt class="col-sm-4">Access Level:</dt>
+                                    <dd class="col-sm-8">
+                                        @switch (Model.Role)
+                                        {
+                                            case "Admin":
+                                                <span class="text-danger">Full Administrative Access</span>
+                                                break;
+                                            case "Manager":
+                                                <span class="text-warning">Management Access</span>
+                                                break;
+                                            default:
+                                                <span class="text-secondary">Standard User Access</span>
+                                                break;
+                                        }
+                                    </dd>
+                                </dl>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="card mt-4">
+                    <div class="card-header">
+                        <h3>Available Actions</h3>
+                    </div>
+                    <div class="card-body">
+                        <div class="btn-group" role="group">
+                            <a href="@Url.Action("Index", "Admin")" class="btn btn-primary">Admin Dashboard</a>
+                            
+                            @if (Model.Role == "Admin" || Model.Role == "Manager")
+                            {
+                                <a href="@Url.Action("Reports", "Admin")" class="btn btn-secondary">View Reports</a>
+                            }
+                            
+                            @if (Model.Role == "Admin")
+                            {
+                                <a href="@Url.Action("UserManager", "Admin")" class="btn btn-success">Manage Users</a>
+                            }
+                        </div>
+                    </div>
+                </div>
+            }
+            else
+            {
+                <div class="alert alert-warning">
+                    <h4>User profile not found</h4>
+                    <p>Unable to load profile information for the current user.</p>
+                </div>
+            }
+
+            <div class="mt-4">
+                <a href="@Url.Action("Index", "Admin")" class="btn btn-outline-primary">Back to Admin Dashboard</a>
+            </div>
+        </div>
+    </div>
+</div>
