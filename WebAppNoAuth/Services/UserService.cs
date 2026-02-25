@@ -4,14 +4,14 @@ namespace WebAppNoAuth.Services;
 
 public class UserService : IUserService
 {
-    private static readonly List<AuthUser> _users = new()
-    {
+    private static readonly List<AuthUser> _users =
+    [
         new AuthUser("admin", "admin@company.com", "Headquarters", "IT", "Admin"),
         new AuthUser("user", "john.doe@company.com", "New York", "Sales", "User"),
         new AuthUser("manager", "jane.smith@company.com", "London", "Marketing", "Manager"),
         new AuthUser("developer", "bob.wilson@company.com", "Tokyo", "Engineering", "Developer"),
         new AuthUser("hr", "alice.brown@company.com", "Sydney", "HR", "HR")
-    };
+    ];
 
     public async Task<AuthUser?> GetUserByUsernameAsync(string username)
     {

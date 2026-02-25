@@ -10,6 +10,13 @@ public class TokenRequest
 
 public class LoginController : Controller
 {
+    private readonly IJwtTokenService _tokenService;
+    
+    public LoginController(IJwtTokenService tokenService)
+    {
+        _tokenService = tokenService;
+    }
+    
     [HttpGet]
     public IActionResult Login()
     {
@@ -25,14 +32,7 @@ public class LoginController : Controller
             return View();
         }
 
-        var tokenService = HttpContext.RequestServices.GetService<IJwtTokenService>();
-        if (tokenService == null)
-        {
-            ViewBag.Error = "Token service not available";
-            return View();
-        }
-
-        var token = tokenService.GenerateToken(username);
+        var token = _tokenService.GenerateToken(username);
         ViewBag.Token = token;
         ViewBag.Username = username;
         ViewBag.Success = "Login successful! Your JWT token is ready.";
@@ -49,13 +49,7 @@ public class LoginController : Controller
             return BadRequest(new { error = "Username is required" });
         }
 
-        var tokenService = HttpContext.RequestServices.GetService<IJwtTokenService>();
-        if (tokenService == null)
-        {
-            return StatusCode(500, new { error = "Token service not available" });
-        }
-
-        var token = tokenService.GenerateToken(username);
+        var token = _tokenService.GenerateToken(username);
         return Ok(new { token = token, username = username });
     }
 
@@ -68,13 +62,7 @@ public class LoginController : Controller
             return BadRequest(new { error = "Username is required" });
         }
 
-        var tokenService = HttpContext.RequestServices.GetService<IJwtTokenService>();
-        if (tokenService == null)
-        {
-            return StatusCode(500, new { error = "Token service not available" });
-        }
-
-        var token = tokenService.GenerateToken(request.Username);
+        var token = _tokenService.GenerateToken(request.Username);
         return Ok(new { token = token, username = request.Username });
     }
 }

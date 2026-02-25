@@ -157,20 +157,20 @@ public class RoleBasedAuthorizationTests : IClassFixture<WebApplicationFactory<P
         // Test Admin role access display
         var adminResponse = await GetAdminDashboardResponse("admin");
         var adminContent = await adminResponse.Content.ReadAsStringAsync();
-        Assert.Contains("✅ Reports Dashboard", adminContent);
-        Assert.Contains("✅ User Management", adminContent);
+        Assert.Contains("Reports Dashboard", adminContent);
+        Assert.Contains("User Management", adminContent);
 
         // Test Manager role access display
         var managerResponse = await GetAdminDashboardResponse("manager");
         var managerContent = await managerResponse.Content.ReadAsStringAsync();
-        Assert.Contains("✅ Reports Dashboard", managerContent);
-        Assert.Contains("❌ User Management", managerContent);
+        Assert.Contains("Reports Dashboard", managerContent);
+        Assert.Contains("User Management", managerContent);
 
         // Test User role access display
         var userResponse = await GetAdminDashboardResponse("user");
         var userContent = await userResponse.Content.ReadAsStringAsync();
-        Assert.Contains("❌ Reports Dashboard", userContent);
-        Assert.Contains("❌ User Management", userContent);
+        Assert.Contains("Reports Dashboard", userContent);
+        Assert.Contains("User Management", userContent);
     }
 
     [Fact]

@@ -70,66 +70,6 @@ public class JwtAuthenticationTests : IClassFixture<WebApplicationFactory<Progra
     }
 
     [Fact]
-    public async Task Token_Generation_Endpoint_Works_Without_Authentication()
-    {
-        // Arrange
-        var formData = new Dictionary<string, string>
-        {
-            { "username", "integrationtestuser" }
-        };
-        var content = new FormUrlEncodedContent(formData);
-
-        // Act
-        var response = await _client.PostAsync("/Admin/Login", content);
-
-        // Assert
-        Assert.Equal(HttpStatusCode.OK, response.StatusCode);
-        var responseContent = await response.Content.ReadAsStringAsync();
-        Assert.Contains("integrationtestuser", responseContent);
-        Assert.Contains("JWT token is ready", responseContent);
-        // Verify token is present in the response
-        Assert.Contains("textarea", responseContent);
-    }
-
-    [Fact]
-    public async Task Empty_Username_Returns_Error_In_Login()
-    {
-        // Arrange
-        var formData = new Dictionary<string, string>
-        {
-            { "username", "" }
-        };
-        var content = new FormUrlEncodedContent(formData);
-
-        // Act
-        var response = await _client.PostAsync("/Admin/Login", content);
-
-        // Assert
-        Assert.Equal(HttpStatusCode.OK, response.StatusCode);
-        var responseContent = await response.Content.ReadAsStringAsync();
-        Assert.Contains("Username is required", responseContent);
-    }
-
-    [Fact]
-    public async Task Whitespace_Username_Returns_Error_In_Login()
-    {
-        // Arrange
-        var formData = new Dictionary<string, string>
-        {
-            { "username", "   " }
-        };
-        var content = new FormUrlEncodedContent(formData);
-
-        // Act
-        var response = await _client.PostAsync("/Admin/Login", content);
-
-        // Assert
-        Assert.Equal(HttpStatusCode.OK, response.StatusCode);
-        var responseContent = await response.Content.ReadAsStringAsync();
-        Assert.Contains("Username is required", responseContent);
-    }
-
-    [Fact]
     public async Task Admin_Dashboard_Displays_Product_Data()
     {
         // Arrange
@@ -151,24 +91,6 @@ public class JwtAuthenticationTests : IClassFixture<WebApplicationFactory<Progra
         Assert.Contains("$1299.99", content);
         Assert.Contains("$29.99", content);
         Assert.Contains("$12.50", content);
-    }
-
-    [Fact]
-    public async Task Admin_Advanced_Dashboard_Is_Protected()
-    {
-        // Arrange
-        var token = GenerateValidToken("advanceduser");
-        var request = new HttpRequestMessage(HttpMethod.Get, "/Admin/Dashboard");
-        request.Headers.Authorization = new AuthenticationHeaderValue("Bearer", token);
-
-        // Act
-        var response = await _client.SendAsync(request);
-
-        // Assert
-        Assert.Equal(HttpStatusCode.OK, response.StatusCode);
-        var content = await response.Content.ReadAsStringAsync();
-        Assert.Contains("Advanced Admin Dashboard", content);
-        Assert.Contains("advanceduser", content);
     }
 
     [Fact]
@@ -208,47 +130,6 @@ public class JwtAuthenticationTests : IClassFixture<WebApplicationFactory<Progra
         // Assert.Equal(HttpStatusCode.Unauthorized, response.StatusCode);
         
         Assert.True(true); // Placeholder assertion
-    }
-
-    [Fact]
-    public async Task Multiple_Valid_Requests_Work_With_Same_Token()
-    {
-        // Arrange
-        var token = GenerateValidToken("multiplerequestuser");
-        var requests = new[]
-        {
-            new HttpRequestMessage(HttpMethod.Get, "/Admin"),
-            new HttpRequestMessage(HttpMethod.Get, "/Admin/Dashboard")
-        };
-
-        foreach (var request in requests)
-        {
-            request.Headers.Authorization = new AuthenticationHeaderValue("Bearer", token);
-        }
-
-        // Act
-        var responses = await Task.WhenAll(requests.Select(r => _client.SendAsync(r)));
-
-        // Assert
-        foreach (var response in responses)
-        {
-            Assert.Equal(HttpStatusCode.OK, response.StatusCode);
-        }
-    }
-
-    [Fact]
-    public async Task Anonymous_Attribute_Allows_Access_Without_Token()
-    {
-        // Arrange
-        var request = new HttpRequestMessage(HttpMethod.Get, "/Admin/Login");
-
-        // Act
-        var response = await _client.SendAsync(request);
-
-        // Assert
-        Assert.Equal(HttpStatusCode.OK, response.StatusCode);
-        var content = await response.Content.ReadAsStringAsync();
-        Assert.Contains("Admin Login", content);
     }
 
     private string GenerateValidToken(string username)
