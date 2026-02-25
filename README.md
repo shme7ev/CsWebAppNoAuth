@@ -117,6 +117,13 @@ curl -s -X POST http://localhost:5033/api/user -H "Content-Type: application/jso
 
 ## AdminController uses role authorization based on AuthUser.Role obtained through AuthUser.Username in JWT token
 
+## To move your sensitive config values to secrets:
+```
+dotnet user-secrets init
+dotnet user-secrets set "ConnectionStrings:DefaultConnection" "Host=localhost;Port=5432;Database=DBName;Username=username;Password=yourpassword"
+dotnet user-secrets set "Jwt:Key" "ThisYourSecretKeyForJWTAuthentication"
+```
+
 ## Known Issues
 
 - Bootstrap and jQuery are not loaded as dependencies
