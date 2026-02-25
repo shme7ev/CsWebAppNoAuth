@@ -96,9 +96,30 @@ Host=localhost;Port=5432;Database=webapp_db;Username=postgres;Password=postgres
 
 Update this string according to your PostgreSQL configuration.
 
+Added UserController to access user list maintained in memory
+- Get all users:
+```
+curl -s http://localhost:5033/api/user | jq
+```
+- Get user by username:
+```
+curl -s http://localhost:5033/api/user/admin | jq
+```
+- Add a user:
+```
+curl -s -X POST http://localhost:5033/api/user -H "Content-Type: application/json" -d '{"username":"test_user","email":"test@example.com","location":"Test City","department":"Testing","role":"Tester"}' | jq
+```
+
+- Get token for a user and request a resource based on that token (urls optional):
+```
+./jwt.sh username resource_url token_url
+```
+
 ## Known Issues
 
 - Bootstrap and jQuery are not loaded as dependencies
-- Need connection pool - is it needed with DbContext?
-- authentification - jwt key needs to be moved somewhere else!
+- connection pool - replace DbContext with DbContextPool
+- authentification - jwt info needs to be moved to Secret Manager !
+- db login info needs to be moved to Secret Manager !
+
 - authorization

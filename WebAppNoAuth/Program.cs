@@ -36,6 +36,9 @@ builder.Services.AddScoped<WebAppNoAuth.Services.IProductServiceEF, WebAppNoAuth
 // Register JWT token service
 builder.Services.AddScoped<WebAppNoAuth.Services.IJwtTokenService, WebAppNoAuth.Services.JwtTokenService>();
 
+// Register User service
+builder.Services.AddScoped<WebAppNoAuth.Services.IUserService, WebAppNoAuth.Services.UserService>();
+
 var app = builder.Build();
 
 // Configure the HTTP request pipeline.

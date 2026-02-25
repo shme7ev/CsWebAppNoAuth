@@ -8,4 +8,18 @@ public class Product
     public decimal Price { get; set; }
     public string Category { get; set; } = string.Empty;
     public DateTime CreatedAt { get; set; }
+
+    // Parameterless constructor
+    public Product() { }
+
+    // All-args constructor
+    public Product(int id, string name, string description, decimal price, string category, DateTime createdAt)
+    {
+        Id = id;
+        Name = name;
+        Description = description;
+        Price = price;
+        Category = category;
+        CreatedAt = createdAt;
+    }
 }
