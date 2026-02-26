@@ -11,12 +11,12 @@ public class TokenRequest
 public class LoginController : Controller
 {
     private readonly IJwtTokenService _tokenService;
-    
+
     public LoginController(IJwtTokenService tokenService)
     {
         _tokenService = tokenService;
     }
-    
+
     [HttpGet]
     public IActionResult Login()
     {
@@ -36,8 +36,11 @@ public class LoginController : Controller
         ViewBag.Token = token;
         ViewBag.Username = username;
         ViewBag.Success = "Login successful! Your JWT token is ready.";
-        
-        return View();
+        ViewBag.Message = "JWT token is ready for use! It is added to your session";
+
+        HttpContext.Session.SetString("Token", token);
+
+        return View("Login");
     }
 
     [HttpGet]
@@ -50,19 +53,19 @@ public class LoginController : Controller
         }
 
         var token = _tokenService.GenerateToken(username);
-        return Ok(new { token = token, username = username });
+        return Ok(new { token, username });
     }
 
     [HttpPost]
     [Route("api/login/token")]
     public IActionResult GetTokenPost([FromBody] TokenRequest request)
     {
-        if (request?.Username == null || string.IsNullOrWhiteSpace(request.Username))
+        if (request.Username == null || string.IsNullOrWhiteSpace(request.Username))
         {
             return BadRequest(new { error = "Username is required" });
         }
 
         var token = _tokenService.GenerateToken(request.Username);
-        return Ok(new { token = token, username = request.Username });
+        return Ok(new { token, username = request.Username });
     }
 }

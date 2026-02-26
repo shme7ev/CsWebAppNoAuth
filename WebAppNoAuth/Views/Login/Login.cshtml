@@ -15,11 +15,11 @@
                         <div class="alert alert-success">
                             <h4 class="alert-heading">@ViewBag.Message</h4>
                             <p><strong>Username:</strong> @ViewBag.Username</p>
-                            <p><strong>Role:</strong> <span class="badge @(ViewBag.Role == "Admin" ? "bg-danger" : ViewBag.Role == "Manager" ? "bg-warning" : "bg-secondary")">@ViewBag.Role</span></p>
-                            
+
                             <div class="mt-3">
                                 <label class="form-label"><strong>Your JWT Token:</strong></label>
-                                <textarea class="form-control" rows="4" readonly onclick="this.select()">@ViewBag.Token</textarea>
+                                <textarea class="form-control" rows="4" readonly
+                                          onclick="this.select()">@ViewBag.Token</textarea>
                             </div>
                         </div>
                     }
@@ -36,7 +36,8 @@
                             <h4 class="alert-heading">Welcome to Admin Portal</h4>
                             <p>Enter a valid username to generate a JWT token with appropriate role-based access.</p>
                             <hr>
-                            <p class="mb-0"><strong>Available default users:</strong></p>
+                            <p class="mb-0"><strong>Available default users: (TODO: pull these from
+                                    UserService)</strong></p>
                             <ul class="mb-0">
                                 <li><strong>admin</strong> - Full administrative access</li>
                                 <li><strong>manager</strong> - Manager access</li>
@@ -45,20 +46,22 @@
                                 <li><strong>hr</strong> - HR access</li>
                             </ul>
 
-                            <p class="mb-0"><strong>You can create your own user (in-memory, not persisted) thru UserController</strong></p>
+                            <p class="mb-0"><strong>You can create your own user (in-memory, not persisted) thru
+                                    UserController</strong></p>
 
                         </div>
                     }
 
                     @if (ViewBag.Message == null)
                     {
-                        <form method="post" asp-action="GenerateToken" asp-controller="Admin" class="mt-4">
+                        <form method="post" class="mt-4">
                             <div class="mb-3">
                                 <label for="username" class="form-label">Username</label>
-                                <input type="text" class="form-control" id="username" name="username" placeholder="Enter username (e.g., admin)" required>
+                                <input type="text" class="form-control" id="username" name="username"
+                                       placeholder="Enter username (e.g., admin)" required>
                                 <div class="form-text">Enter username.</div>
                             </div>
-                            
+
                             <div class="d-grid gap-2">
                                 <button type="submit" class="btn btn-primary btn-lg">
                                     Generate JWT Token
@@ -69,27 +72,26 @@
 
                     <div class="mt-4">
                         <div class="card">
-                            <div class="card-header bg-light">
-                                <h5 class="mb-0">How to Use Your Token</h5>
+
+                            <div class="mt-4">
+                                <li><a href="@Url.Action("Index", "Admin")" class="btn btn-primary">
+                                        Admin Dashboard - all authenticated users
+                                    </a></li>
+                                <li><a href="@Url.Action("Profile", "Admin")" class="btn btn-info">
+                                        My Profile - all authenticated users
+                                    </a></li>
+                                <li><a href="@Url.Action("Reports", "Admin")" class="btn btn-secondary">
+                                        View Reports - Admin and Manager only
+                                    </a></li>
+                                <li><a href="@Url.Action("UserManager", "Admin")" class="btn btn-secondary">
+                                        UserManager - Admin only
+                                    </a></li>
                             </div>
-                            <div class="card-body">
-                                <ol>
-                                    <li>Copy the JWT token above</li>
-                                    <li>Add it to your HTTP requests in the Authorization header</li>
-                                    <li>Format: <code>Bearer YOUR_TOKEN_HERE</code></li>
-                                    <li>Test different admin endpoints based on your role:</li>
-                                    <ul>
-                                        <li><strong>All authenticated users:</strong> /Admin/Profile</li>
-                                        <li><strong>Admin & Managers:</strong> /Admin/Reports</li>
-                                        <li><strong>Admin only:</strong> /Admin/UserManager</li>
-                                    </ul>
-                                </ol>
-                                
-                                <div class="mt-3">
-                                    <a href="@Url.Action("Index", "Home")" class="btn btn-outline-secondary">
-                                        ← Back to Home
-                                    </a>
-                                </div>
+
+                            <div class="mt-3">
+                                <a href="@Url.Action("Index", "Home")" class="btn btn-outline-secondary">
+                                    ← Back to Home
+                                </a>
                             </div>
                         </div>
                     </div>

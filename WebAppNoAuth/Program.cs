@@ -6,6 +6,13 @@ var builder = WebApplication.CreateBuilder(args);
 builder.Services.AddControllersWithViews();
 builder.Services.AddSwaggerGen();
 
+// Add session services
+builder.Services.AddSession(options =>
+{
+    options.Cookie.HttpOnly = true;
+    options.Cookie.IsEssential = true;
+});
+
 builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
     .AddJwtBearer(options =>
     {
@@ -20,15 +27,16 @@ builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
             IssuerSigningKey = new Microsoft.IdentityModel.Tokens.SymmetricSecurityKey(
                 System.Text.Encoding.UTF8.GetBytes(builder.Configuration["Jwt:Key"]!))
         };
-        
+
         // Add custom event to enrich claims with user roles
         options.Events = new JwtBearerEvents
         {
             OnTokenValidated = async context =>
             {
-                var userService = context.HttpContext.RequestServices.GetRequiredService<WebAppNoAuth.Services.IUserService>();
+                var userService = context.HttpContext.RequestServices
+                    .GetRequiredService<WebAppNoAuth.Services.IUserService>();
                 var username = context.Principal?.Identity?.Name;
-                
+
                 if (!string.IsNullOrEmpty(username))
                 {
                     var user = await userService.GetUserByUsernameAsync(username);
@@ -38,7 +46,7 @@ builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
                         {
                             new(System.Security.Claims.ClaimTypes.Role, user.Role)
                         };
-                        
+
                         var appIdentity = new System.Security.Claims.ClaimsIdentity(claims);
                         context.Principal?.AddIdentity(appIdentity);
                     }
@@ -72,6 +80,16 @@ if (!app.Environment.IsDevelopment())
     // The default HSTS value is 30 days. You may want to change this for production scenarios, see https://aka.ms/aspnetcore-hsts.
     app.UseHsts();
 }
+
+app.UseSession();
+
+//add token to request header.
+app.Use(async (HttpContext context, RequestDelegate next) =>
+{
+    var token = context.Session.GetString("Token");
+    if (!string.IsNullOrEmpty(token)) context.Request.Headers.Append("Authorization", "Bearer " + token);
+    await next(context);
+});
 
 app.UseHttpsRedirection();
 app.UseRouting();

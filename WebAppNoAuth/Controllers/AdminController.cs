@@ -23,8 +23,7 @@ public class AdminController : Controller
     private async Task<string> GetUserRoleAsync()
     {
         var username = User.Identity?.Name;
-        if (string.IsNullOrEmpty(username))
-            return "Unknown";
+        if (string.IsNullOrEmpty(username)) return "Unknown";
 
         var user = await _userService.GetUserByUsernameAsync(username);
         return user?.Role ?? "Unknown";
@@ -33,17 +32,17 @@ public class AdminController : Controller
     public async Task<IActionResult> Index()
     {
         var viewModel = new HomeViewModel();
-        
+
         viewModel.RawSqlProducts = await _productService.GetAllProductsAsync();
         viewModel.RawSqlCount = viewModel.RawSqlProducts.Count;
-        
+
         viewModel.EntityFrameworkProducts = await _productServiceEF.GetAllProductsAsync();
         viewModel.EntityFrameworkCount = viewModel.EntityFrameworkProducts.Count;
-        
+
         ViewBag.Message = "Welcome to the Admin Dashboard! This section is protected and requires JWT authentication.";
         ViewBag.Username = User.Identity?.Name ?? "Authenticated User";
         ViewBag.UserRole = await GetUserRoleAsync();
-        
+
         return View(viewModel);
     }
 
@@ -55,7 +54,7 @@ public class AdminController : Controller
         ViewBag.Message = "User Management - Admin Only";
         ViewBag.Username = User.Identity?.Name ?? "Authenticated User";
         ViewBag.UserRole = await GetUserRoleAsync();
-        
+
         return View("UserManager", users);
     }
 
@@ -71,12 +70,12 @@ public class AdminController : Controller
             ManagerUsers = users.Count(u => u.Role == "Manager"),
             RegularUsers = users.Count(u => u.Role == "User" || u.Role == "Developer")
         };
-        
+
         ViewBag.Message = "Reports Dashboard - Admin and Managers Only";
         ViewBag.Username = User.Identity?.Name ?? "Authenticated User";
         ViewBag.UserRole = await GetUserRoleAsync();
         ViewBag.Stats = userStats;
-        
+
         return View("Reports");
     }
 
@@ -89,12 +88,12 @@ public class AdminController : Controller
         {
             return RedirectToAction("Index");
         }
-        
+
         var user = await _userService.GetUserByUsernameAsync(username);
         ViewBag.Message = "User Profile";
         ViewBag.Username = username;
         ViewBag.UserRole = await GetUserRoleAsync();
-        
+
         return View("Profile", user);
     }
 
@@ -105,32 +104,4 @@ public class AdminController : Controller
     {
         return View();
     }
-
-    // [HttpPost]
-    // [AllowAnonymous]
-    // public async Task<IActionResult> GenerateToken([FromForm] string username)
-    // {
-    //     if (string.IsNullOrWhiteSpace(username))
-    //     {
-    //         ViewBag.Error = "Username is required";
-    //         return View("Login");
-    //     }
-    //
-    //     var user = await _userService.GetUserByUsernameAsync(username.Trim());
-    //     if (user == null)
-    //     {
-    //         ViewBag.Error = "User not found";
-    //         return View("Login");
-    //     }
-    //
-    //     var tokenService = HttpContext.RequestServices.GetRequiredService<IJwtTokenService>();
-    //     var token = tokenService.GenerateToken(user.Username);
-    //
-    //     ViewBag.Username = user.Username;
-    //     ViewBag.Role = user.Role;
-    //     ViewBag.Token = token;
-    //     ViewBag.Message = "JWT token is ready for use!";
-    //
-    //     return View("Login");
-    // }
 }

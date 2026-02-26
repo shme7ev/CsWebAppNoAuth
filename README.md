@@ -128,5 +128,7 @@ dotnet user-secrets set "Jwt:Key" "ThisYourSecretKeyForJWTAuthentication"
 
 - Bootstrap and jQuery are not loaded as dependencies
 - connection pool - replace DbContext with DbContextPool
-- authentification - jwt info needs to be moved to Secret Manager !
-- db login info needs to be moved to Secret Manager !
+- logging in Kubernetes - loki ?
+- sign docs with CryptoPro 
+- kubernetes
+- local document storage integrated with metadata in db 
