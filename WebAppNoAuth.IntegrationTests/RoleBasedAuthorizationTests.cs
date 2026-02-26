@@ -6,12 +6,12 @@ using WebAppNoAuth.Services;
 
 namespace WebAppNoAuth.IntegrationTests;
 
-public class RoleBasedAuthorizationTests : IClassFixture<WebApplicationFactory<Program>>
+public class RoleBasedAuthorizationTests : IClassFixture<CustomWebApplicationFactory<Program>>
 {
-    private readonly WebApplicationFactory<Program> _factory;
+    private readonly CustomWebApplicationFactory<Program> _factory;
     private readonly HttpClient _client;
 
-    public RoleBasedAuthorizationTests(WebApplicationFactory<Program> factory)
+    public RoleBasedAuthorizationTests(CustomWebApplicationFactory<Program> factory)
     {
         _factory = factory;
         _client = _factory.CreateClient();

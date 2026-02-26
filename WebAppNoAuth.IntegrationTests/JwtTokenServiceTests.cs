@@ -8,11 +8,11 @@ using WebAppNoAuth.Services;
 
 namespace WebAppNoAuth.IntegrationTests;
 
-public class JwtTokenServiceTests : IClassFixture<WebApplicationFactory<Program>>
+public class JwtTokenServiceTests : IClassFixture<CustomWebApplicationFactory<Program>>
 {
-    private readonly WebApplicationFactory<Program> _factory;
+    private readonly CustomWebApplicationFactory<Program> _factory;
 
-    public JwtTokenServiceTests(WebApplicationFactory<Program> factory)
+    public JwtTokenServiceTests(CustomWebApplicationFactory<Program> factory)
     {
         _factory = factory;
     }

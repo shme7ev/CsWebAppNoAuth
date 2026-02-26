@@ -16,19 +16,6 @@ Tests the core JWT authentication functionality:
 - Multiple valid requests work with the same token
 - Anonymous endpoints allow access without token
 
-### AdminControllerTests.cs
-Tests the Admin controller functionality:
-- Admin index page returns success with valid token
-- Admin dashboard page works correctly
-- Admin login GET returns login form
-- Admin login POST generates valid tokens for various usernames
-- Admin generate token endpoint behavior
-- Navigation links work correctly
-- User identity is displayed correctly
-- Security indicators are shown properly
-- UI components render correctly
-- View data titles are set appropriately
-
 ### JwtTokenServiceTests.cs
 Tests the JWT token service directly:
 - Token service can be resolved from DI container
@@ -94,11 +81,6 @@ The `CustomWebApplicationFactory.cs` provides a configurable test environment th
 - Allows service overrides for test scenarios
 - Provides consistent test setup across all test classes
 
-## Current Test Status
-
-**35 tests passing**
-⏭**1 test skipped** (Token expiration - requires specialized time manipulation)
-**0 tests failing**
 
 ## Prerequisites
 
@@ -121,3 +103,10 @@ curl -X POST http://localhost:5033/Admin/Login -H "Content-Type: application/x-w
 To use the token:
 
 curl -H "Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJodHRwOi8vc2NoZW1hcy54bWxzb2FwLm9yZy93cy8yMDA1LzA1L2lkZW50aXR5L2NsYWltcy9uYW1lIjoidGVzdHVzZXIiLCJodHRwOi8vc2NoZW1hcy54bWxzb2FwLm9yZy93cy8yMDA1LzA1L2lkZW50aXR5L2NsYWltcy9uYW1laWRlbnRpZmllciI6InRlc3R1c2VyIiwianRpIjoiMWQwMDI5ZmItY2IzYy00YjIzLWJlNzAtNmViZTllMzIwYTkxIiwiZXhwIjoxNzcxNzcyMzUzLCJpc3MiOiJXZWJBcHBOb0F1dGgiLCJhdWQiOiJXZWJBcHBOb0F1dGhVc2VycyJ9.LCJMzba_9GckuNYoVPxfm7AguHhRW9j4-qRuEsuY-UE" http://localhost:5033/Admin
+
+To run tests with env variable:
+
+appsettings.Testing.json: "DefaultConnection": ${TEST_DATABASE_CONNECTION_STRING}
+
+TEST_DATABASE_CONNECTION_STRING="Host=localhost;Database=test_db;Username=testuser;Password=testpass" dotnet test
+

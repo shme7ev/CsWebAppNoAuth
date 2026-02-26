@@ -9,12 +9,12 @@ using WebAppNoAuth.Services;
 
 namespace WebAppNoAuth.IntegrationTests;
 
-public class JwtAuthenticationTests : IClassFixture<WebApplicationFactory<Program>>
+public class JwtAuthenticationTests : IClassFixture<CustomWebApplicationFactory<Program>>
 {
-    private readonly WebApplicationFactory<Program> _factory;
+    private readonly CustomWebApplicationFactory<Program> _factory;
     private readonly HttpClient _client;
 
-    public JwtAuthenticationTests(WebApplicationFactory<Program> factory)
+    public JwtAuthenticationTests(CustomWebApplicationFactory<Program> factory)
     {
         _factory = factory;
         _client = _factory.CreateClient();
