@@ -4,22 +4,21 @@ using Serilog;
 
 var builder = WebApplication.CreateBuilder(args);
 
-// Configure Serilog
-Log.Logger = new LoggerConfiguration()
-    .ReadFrom.Configuration(builder.Configuration)
-    .Enrich.FromLogContext()
-    .WriteTo.Console(
-        outputTemplate:
-        "[{Timestamp:yyyy-MM-dd HH:mm:ss} {Level:u3}] {SourceContext} - {Message:lj}{NewLine}{Exception}"
+builder.Host.UseSerilog(
+    new LoggerConfiguration()
+        .ReadFrom.Configuration(builder.Configuration)
+        .Enrich.FromLogContext()
+        .WriteTo.Console(
+            outputTemplate:
+            "[{Timestamp:yyyy-MM-dd HH:mm:ss} {Level:u3}] {SourceContext} - {Message:lj}{NewLine}{Exception}"
         )
-    .WriteTo.File("logs/webapp-.log",
-        outputTemplate:
-        "[{Timestamp:yyyy-MM-dd HH:mm:ss} {Level:u3}] {SourceContext} - {Message:lj}{NewLine}{Exception}",
-                  rollingInterval: RollingInterval.Day,
-                  retainedFileCountLimit: 7)
-    .CreateLogger();
-
-builder.Host.UseSerilog();
+        .WriteTo.File("logs/webapp-.log",
+            outputTemplate:
+            "[{Timestamp:yyyy-MM-dd HH:mm:ss} {Level:u3}] {SourceContext} - {Message:lj}{NewLine}{Exception}",
+            rollingInterval: RollingInterval.Day,
+            retainedFileCountLimit: 7)
+        .CreateLogger()
+);
 
 builder.Services.AddControllersWithViews();
 builder.Services.AddSwaggerGen();
