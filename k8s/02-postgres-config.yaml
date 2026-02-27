@@ -1,0 +1,17 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: postgres-config
+  namespace: webapp-noauth
+data:
+  postgres-db: webapp_db
+---
+apiVersion: v1
+kind: Secret
+metadata:
+  name: postgres-secret
+  namespace: webapp-noauth
+type: Opaque
+data:
+  postgres-password: cG9zdGdyZXM=  # base64 encoded
+  postgres-user: cG9zdGdyZXM=      # base64

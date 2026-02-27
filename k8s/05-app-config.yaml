@@ -1,0 +1,35 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: webapp-config
+  namespace: webapp-noauth
+data:
+  appsettings.Production.json: |
+    {
+      "Logging": {
+        "LogLevel": {
+          "Default": "Information",
+          "Microsoft.AspNetCore": "Warning"
+        }
+      },
+      "AllowedHosts": "*",
+      "ConnectionStrings": {
+        "DefaultConnection": "${ConnectionStrings__DefaultConnection}"
+      },
+      "Jwt": {
+        "Key": "${Jwt__Key}",
+        "Issuer": "WebAppNoAuth",
+        "Audience": "WebAppNoAuthUsers",
+        "ExpireMinutes": 60
+      }
+    }
+---
+apiVersion: v1
+kind: Secret
+metadata:
+  name: webapp-secrets
+  namespace: webapp-noauth
+type: Opaque
+data:
+  Jwt__Key: VGhpc0lzQVNlY3JldEtleUZvckpXVEF1dGhlbnRpY2F0aW9uMTIzNDUh
+  ConnectionStrings__DefaultConnection: SG9zdD1wb3N0Z3Jlcy1zZXJ2aWNlO1BvcnQ9NTQzMjtEYXRhYmFzZT13ZWJhcHBfZGI7VXNlcm5hbWU9cG9zdGdyZXM7UGFzc3dvcmQ9cG9zdGdyZXM=
