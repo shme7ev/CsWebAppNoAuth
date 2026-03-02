@@ -1,24 +1,18 @@
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.EntityFrameworkCore;
 using Serilog;
+using Serilog.Enrichers;
 
 var builder = WebApplication.CreateBuilder(args);
 
-builder.Host.UseSerilog(
-    new LoggerConfiguration()
-        .ReadFrom.Configuration(builder.Configuration)
+builder.Host.UseSerilog((context, services, loggerConfiguration) =>
+{
+    loggerConfiguration
+        .ReadFrom.Configuration(context.Configuration)
         .Enrich.FromLogContext()
-        .WriteTo.Console(
-            outputTemplate:
-            "[{Timestamp:yyyy-MM-dd HH:mm:ss} {Level:u3}] {SourceContext} - {Message:lj}{NewLine}{Exception}"
-        )
-        .WriteTo.File("logs/webapp-.log",
-            outputTemplate:
-            "[{Timestamp:yyyy-MM-dd HH:mm:ss} {Level:u3}] {SourceContext} - {Message:lj}{NewLine}{Exception}",
-            rollingInterval: RollingInterval.Day,
-            retainedFileCountLimit: 7)
-        .CreateLogger()
-);
+        .Enrich.WithMachineName()
+        .Enrich.WithThreadId();
+});
 
 builder.Services.AddControllersWithViews();
 builder.Services.AddSwaggerGen();

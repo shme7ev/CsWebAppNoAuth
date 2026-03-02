@@ -21,6 +21,7 @@ public class HomeController : Controller
     
     public async Task<IActionResult> Index()
     {
+        _logger.LogInformation("HomeController.Index() called - Processing home page request");
         _logger.LogDebug("HomeController.Index() called");
         
         var viewModel = new HomeViewModel();
@@ -29,7 +30,7 @@ public class HomeController : Controller
         _logger.LogDebug("Fetching products using raw SQL");
         viewModel.RawSqlProducts = await _productService.GetAllProductsAsync();
         viewModel.RawSqlCount = viewModel.RawSqlProducts.Count;
-        _logger.LogDebug($"Retrieved {viewModel.RawSqlCount} products using raw SQL");
+        _logger.LogDebug("Retrieved products using raw SQL {@ProductCount}", viewModel.RawSqlCount);
         
         // Get products using Entity Framework
         _logger.LogDebug("Fetching products using Entity Framework");
@@ -53,7 +54,8 @@ public class HomeController : Controller
     {
         _logger.LogDebug("HomeController.Error() called");
         var requestId = Activity.Current?.Id ?? HttpContext.TraceIdentifier;
-        _logger.LogError("Error occurred. Request ID: {RequestId}", requestId);
+        _logger.LogError("Error occurred in HomeController. Request ID: {RequestId}, Path: {RequestPath}", 
+            requestId, HttpContext.Request.Path);
         return View(new ErrorViewModel { RequestId = requestId });
     }
 }
