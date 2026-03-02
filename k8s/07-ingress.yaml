@@ -18,6 +18,13 @@ spec:
             name: webappnoauth-service
             port:
               number: 80
+      - path: /api/files
+        pathType: Prefix
+        backend:
+          service:
+            name: filestorageservice-service
+            port:
+              number: 8080
 ---
 apiVersion: v1
 kind: Service

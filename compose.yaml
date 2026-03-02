@@ -1,4 +1,4 @@
-﻿services:
+services:
   webappnoauth:
     image: webappnoauth
     build:
@@ -6,4 +6,42 @@
       dockerfile: WebAppNoAuth/Dockerfile
     ports:
       - "8080:8080"
+    depends_on:
+      - postgres
+    environment:
+      - ASPNETCORE_ENVIRONMENT=Development
+      - ConnectionStrings__DefaultConnection=Host=postgres;Port=5432;Database=webapp_db;Username=postgres;Password=postgres
+      - Jwt__Key=ThisIsASecretKeyForJWTAuthentication12345!
 
+  filestorageservice:
+    image: filestorageservice
+    build:
+      context: .
+      dockerfile: FileStorageService/Dockerfile
+    ports:
+      - "8081:8080"
+    depends_on:
+      - postgres
+    environment:
+      - ASPNETCORE_ENVIRONMENT=Development
+      - ConnectionStrings__DefaultConnection=Host=postgres;Port=5432;Database=webapp_db;Username=postgres;Password=postgres
+      - FileStorage__StoragePath=/app/storage
+    volumes:
+      - file-storage-data:/app/storage
+
+  postgres:
+    image: postgres:16-alpine
+    environment:
+      - POSTGRES_DB=webapp_db
+      - POSTGRES_USER=postgres
+      - POSTGRES_PASSWORD=postgres
+    ports:
+      - "5432:5432"
+    volumes:
+      - postgres-data:/var/lib/postgresql/data
+      - ./init-database.sql:/docker-entrypoint-initdb.d/01-init-database.sql
+      - ./init-files-table.sql:/docker-entrypoint-initdb.d/02-init-files-table.sql
+
+volumes:
+  postgres-data:
+  file-storage-data:

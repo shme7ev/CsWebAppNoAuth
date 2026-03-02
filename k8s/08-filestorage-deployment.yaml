@@ -1,0 +1,76 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: filestorageservice
+  namespace: webapp-noauth
+  labels:
+    app: filestorageservice
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: filestorageservice
+  template:
+    metadata:
+      labels:
+        app: filestorageservice
+    spec:
+      containers:
+      - name: filestorageservice
+        image: localhost:5000/filestorageservice:latest
+        ports:
+        - containerPort: 8080
+        env:
+        - name: ASPNETCORE_ENVIRONMENT
+          value: "Production"
+        - name: ASPNETCORE_URLS
+          value: "http://+:8080"
+        - name: ConnectionStrings__DefaultConnection
+          valueFrom:
+            secretKeyRef:
+              name: webapp-secrets
+              key: ConnectionStrings__DefaultConnection
+        - name: FileStorage__StoragePath
+          value: "/app/storage"
+        volumeMounts:
+        - name: file-storage-pvc
+          mountPath: /app/storage
+        readinessProbe:
+          httpGet:
+            path: /health
+            port: 8080
+          initialDelaySeconds: 30
+          periodSeconds: 10
+        livenessProbe:
+          httpGet:
+            path: /health
+            port: 8080
+          initialDelaySeconds: 60
+          periodSeconds: 30
+        resources:
+          requests:
+            memory: "128Mi"
+            cpu: "100m"
+          limits:
+            memory: "256Mi"
+            cpu: "200m"
+      volumes:
+      - name: file-storage-pvc
+        persistentVolumeClaim:
+          claimName: file-storage-pvc
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: filestorageservice-service
+  namespace: webapp-noauth
+  labels:
+    app: filestorageservice
+spec:
+  selector:
+    app: filestorageservice
+  ports:
+  - protocol: TCP
+    port: 8080
+    targetPort: 8080
+  type: ClusterIP
