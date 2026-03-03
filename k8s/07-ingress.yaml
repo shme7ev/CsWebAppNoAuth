@@ -5,8 +5,12 @@ metadata:
   namespace: webapp-noauth
   annotations:
     nginx.ingress.kubernetes.io/rewrite-target: /
-    nginx.ingress.kubernetes.io/ssl-redirect: "false"
+    nginx.ingress.kubernetes.io/ssl-redirect: "true"
 spec:
+  tls:
+  - hosts:
+    - webapp.local
+    secretName: webapp-tls-secret
   rules:
   - host: webapp.local
     http:

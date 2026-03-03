@@ -120,3 +120,32 @@ If you encounter issues:
 2. Check logs: `kubectl logs -n webapp-noauth <pod-name>`
 3. Verify services: `kubectl get services -n webapp-noauth`
 4. Ensure k3s is running: `systemctl status k3s`
+
+## To access postgres locally:
+```
+kubectl port-forward service/postgres-service -n webapp-noauth 5432:5432
+```
+
+## To create the TLS secret in Kubernetes with your SSL certificate:
+```
+kubectl create secret tls webapp-tls-secret \
+--cert=path/to/tls.crt \
+--key=path/to/tls.key \
+-n webapp-noauth
+```
+## Or if you're using a self-signed certificate for development:
+### Generate self-signed certificate
+```
+openssl req -x509 -nodes -days 365 -newkey rsa:2048 \
+-keyout tls.key -out tls.crt \
+-subj "/CN=webapp.local"
+```
+### Create the secret
+```
+kubectl create secret tls webapp-tls-secret \
+--cert=tls.crt \
+--key=tls.key \
+-n webapp-noauth
+```
+
+

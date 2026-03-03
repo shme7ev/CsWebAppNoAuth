@@ -12,31 +12,24 @@ public interface IProductServiceEF
     Task<int> GetTotalProductsCountAsync();
 }
 
-public class ProductServiceEF : IProductServiceEF
+public class ProductServiceEF(ApplicationDbContext context) : IProductServiceEF
 {
-    private readonly ApplicationDbContext _context;
-
-    public ProductServiceEF(ApplicationDbContext context)
-    {
-        _context = context;
-    }
-
     public async Task<List<Product>> GetAllProductsAsync()
     {
-        return await _context.Products
+        return await context.Products
             .OrderBy(p => p.Name)
             .ToListAsync();
     }
 
     public async Task<Product?> GetProductByIdAsync(int id)
     {
-        return await _context.Products
+        return await context.Products
             .FirstOrDefaultAsync(p => p.Id == id);
     }
 
     public async Task<List<Product>> GetProductsByCategoryAsync(string category)
     {
-        return await _context.Products
+        return await context.Products
             .Where(p => p.Category == category)
             .OrderBy(p => p.Name)
             .ToListAsync();
@@ -44,6 +37,6 @@ public class ProductServiceEF : IProductServiceEF
 
     public async Task<int> GetTotalProductsCountAsync()
     {
-        return await _context.Products.CountAsync();
+        return await context.Products.CountAsync();
     }
 }

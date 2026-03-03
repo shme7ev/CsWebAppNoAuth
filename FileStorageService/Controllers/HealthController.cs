@@ -7,15 +7,8 @@ namespace FileStorageService.Controllers;
 /// </summary>
 [ApiController]
 [Route("[controller]")]
-public class HealthController : ControllerBase
+public class HealthController(ILogger<HealthController> logger) : ControllerBase
 {
-    private readonly ILogger<HealthController> _logger;
-
-    public HealthController(ILogger<HealthController> logger)
-    {
-        _logger = logger;
-    }
-
     /// <summary>
     /// Check the health status of the file storage service
     /// </summary>
@@ -25,7 +18,7 @@ public class HealthController : ControllerBase
     [ProducesResponseType(StatusCodes.Status200OK)]
     public IActionResult Get()
     {
-        _logger.LogDebug("Health check requested");
+        logger.LogDebug("Health check requested");
         return Ok(new { Status = "Healthy", Service = "FileStorageService", Timestamp = DateTime.UtcNow });
     }
 }

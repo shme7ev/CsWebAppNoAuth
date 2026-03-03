@@ -7,17 +7,9 @@ namespace FileStorageService.Controllers;
 
 [ApiController]
 [Route("api/[controller]")]
-public class FilesController : ControllerBase
+public class FilesController(IFileStorageService fileStorageService, ILogger<FilesController> logger)
+    : ControllerBase
 {
-    private readonly IFileStorageService _fileStorageService;
-    private readonly ILogger<FilesController> _logger;
-
-    public FilesController(IFileStorageService fileStorageService, ILogger<FilesController> logger)
-    {
-        _fileStorageService = fileStorageService;
-        _logger = logger;
-    }
-
     /// <summary>
     /// Upload a file to the storage service
     /// </summary>
@@ -50,7 +42,7 @@ public class FilesController : ControllerBase
         {
             var uploadedBy = Request.Headers["X-Uploaded-By"].FirstOrDefault() ?? "anonymous";
 
-            var (success, message, fileId) = await _fileStorageService.StoreFileAsync(
+            var (success, message, fileId) = await fileStorageService.StoreFileAsync(
                 request.File,
                 uploadedBy,
                 request.Description);
@@ -70,7 +62,7 @@ public class FilesController : ControllerBase
         }
         catch (Exception ex)
         {
-            _logger.LogError(ex, "Error uploading file");
+            logger.LogError(ex, "Error uploading file");
             return StatusCode(500, new { Message = "Internal server error occurred while uploading file" });
         }
     }
@@ -91,7 +83,7 @@ public class FilesController : ControllerBase
     {
         try
         {
-            var (content, contentType, fileName) = await _fileStorageService.RetrieveFileAsync(id);
+            var (content, contentType, fileName) = await fileStorageService.RetrieveFileAsync(id);
 
             if (content == null || contentType == null || fileName == null)
             {
@@ -102,7 +94,7 @@ public class FilesController : ControllerBase
         }
         catch (Exception ex)
         {
-            _logger.LogError(ex, "Error downloading file: {FileId}", id);
+            logger.LogError(ex, "Error downloading file: {FileId}", id);
             return StatusCode(500, new { Message = "Internal server error occurred while downloading file" });
         }
     }
@@ -123,7 +115,7 @@ public class FilesController : ControllerBase
     {
         try
         {
-            var metadata = await _fileStorageService.GetFileMetadataAsync(id);
+            var metadata = await fileStorageService.GetFileMetadataAsync(id);
 
             if (metadata == null)
             {
@@ -145,7 +137,7 @@ public class FilesController : ControllerBase
         }
         catch (Exception ex)
         {
-            _logger.LogError(ex, "Error getting file metadata: {FileId}", id);
+            logger.LogError(ex, "Error getting file metadata: {FileId}", id);
             return StatusCode(500, new { Message = "Internal server error occurred while retrieving file metadata" });
         }
     }
@@ -175,7 +167,7 @@ public class FilesController : ControllerBase
         {
             var deletedBy = Request.Headers["X-Deleted-By"].FirstOrDefault() ?? "anonymous";
 
-            var success = await _fileStorageService.DeleteFileAsync(id, deletedBy);
+            var success = await fileStorageService.DeleteFileAsync(id, deletedBy);
 
             if (!success) { return NotFound(new { Message = "File not found or already deleted" }); }
 
@@ -183,7 +175,7 @@ public class FilesController : ControllerBase
         }
         catch (Exception ex)
         {
-            _logger.LogError(ex, "Error deleting file: {FileId}", id);
+            logger.LogError(ex, "Error deleting file: {FileId}", id);
             return StatusCode(500, new { Message = "Internal server error occurred while deleting file" });
         }
     }
@@ -209,7 +201,7 @@ public class FilesController : ControllerBase
     {
         try
         {
-            var files = await _fileStorageService.ListFilesAsync(uploadedBy, includeDeleted);
+            var files = await fileStorageService.ListFilesAsync(uploadedBy, includeDeleted);
 
             var result = files.Select(f => new
             {
@@ -227,7 +219,7 @@ public class FilesController : ControllerBase
         }
         catch (Exception ex)
         {
-            _logger.LogError(ex, "Error listing files");
+            logger.LogError(ex, "Error listing files");
             return StatusCode(500, new { Message = "Internal server error occurred while listing files" });
         }
     }

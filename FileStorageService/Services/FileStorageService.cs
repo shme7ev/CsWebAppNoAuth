@@ -10,22 +10,24 @@ public class FileStorageServiceImpl : IFileStorageService
     private readonly string _storagePath;
     private readonly ILogger<FileStorageServiceImpl> _logger;
 
-    public FileStorageServiceImpl(FileStorageDbContext context, IConfiguration configuration, ILogger<FileStorageServiceImpl> logger)
+    public FileStorageServiceImpl(FileStorageDbContext context, IConfiguration configuration,
+        ILogger<FileStorageServiceImpl> logger)
     {
         _context = context;
         _logger = logger;
         _storagePath = configuration["FileStorage:StoragePath"] ?? "/app/storage";
-        
+
         // Ensure storage directory exists
         Directory.CreateDirectory(_storagePath);
         _logger.LogInformation("File storage path initialized: {StoragePath}", _storagePath);
     }
 
-    public async Task<(bool Success, string Message, Guid? FileId)> StoreFileAsync(IFormFile file, string uploadedBy, string? description = null)
+    public async Task<(bool Success, string Message, Guid? FileId)> StoreFileAsync(IFormFile file, string uploadedBy,
+        string? description = null)
     {
         try
         {
-            if (file == null || file.Length == 0)
+            if (file.Length == 0)
             {
                 return (false, "File is empty", null);
             }
@@ -60,7 +62,7 @@ public class FileStorageServiceImpl : IFileStorageService
             _context.Files.Add(fileMetadata);
             await _context.SaveChangesAsync();
 
-            _logger.LogInformation("File stored successfully: {FileName} ({FileSize} bytes) by {UploadedBy}", 
+            _logger.LogInformation("File stored successfully: {FileName} ({FileSize} bytes) by {UploadedBy}",
                 file.FileName, file.Length, uploadedBy);
 
             return (true, "File stored successfully", fileMetadata.Id);
@@ -79,10 +81,7 @@ public class FileStorageServiceImpl : IFileStorageService
             var fileMetadata = await _context.Files
                 .FirstOrDefaultAsync(f => f.Id == fileId && !f.IsDeleted);
 
-            if (fileMetadata == null)
-            {
-                return (null, null, null);
-            }
+            if (fileMetadata == null) return (null, null, null);
 
             if (!File.Exists(fileMetadata.FilePath))
             {
@@ -91,8 +90,8 @@ public class FileStorageServiceImpl : IFileStorageService
             }
 
             var content = await File.ReadAllBytesAsync(fileMetadata.FilePath);
-            
-            _logger.LogInformation("File retrieved: {FileName} ({FileSize} bytes)", 
+
+            _logger.LogInformation("File retrieved: {FileName} ({FileSize} bytes)",
                 fileMetadata.OriginalFileName, content.Length);
 
             return (content, fileMetadata.ContentType, fileMetadata.OriginalFileName);
@@ -120,7 +119,7 @@ public class FileStorageServiceImpl : IFileStorageService
             fileMetadata.IsDeleted = true;
             fileMetadata.DeletedAt = DateTime.UtcNow;
             fileMetadata.DeletedBy = deletedBy;
-            
+
             await _context.SaveChangesAsync();
 
             // Delete physical file
@@ -130,7 +129,7 @@ public class FileStorageServiceImpl : IFileStorageService
                 _logger.LogInformation("Physical file deleted: {FilePath}", fileMetadata.FilePath);
             }
 
-            _logger.LogInformation("File marked as deleted: {FileName} by {DeletedBy}", 
+            _logger.LogInformation("File marked as deleted: {FileName} by {DeletedBy}",
                 fileMetadata.OriginalFileName, deletedBy);
 
             return true;

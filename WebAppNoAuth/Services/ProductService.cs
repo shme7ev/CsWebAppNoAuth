@@ -10,15 +10,10 @@ public interface IProductService
     Task<List<Product>> GetProductsByCategoryAsync(string category);
 }
 
-public class ProductService : IProductService
+public class ProductService(IConfiguration configuration) : IProductService
 {
-    private readonly string _connectionString;
-
-    public ProductService(IConfiguration configuration)
-    {
-        _connectionString = configuration.GetConnectionString("DefaultConnection") 
-                            ?? throw new InvalidOperationException("Connection string 'DefaultConnection' not found.");
-    }
+    private readonly string _connectionString = configuration.GetConnectionString("DefaultConnection")
+                                                ?? throw new InvalidOperationException("Connection string 'DefaultConnection' not found.");
 
     public async Task<List<Product>> GetAllProductsAsync()
     {
