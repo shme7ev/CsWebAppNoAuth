@@ -1,6 +1,8 @@
 # Web Application with PostgreSQL Integration
 
-This ASP.NET Core web application demonstrates integration with PostgreSQL database to display product data.
+This ASP.NET Core web application demonstrates integration with PostgreSQL, kubernetes, loki, Serilog
+
+[![Ask DeepWiki](https://deepwiki.com/badge.svg)](https://deepwiki.com/shme7ev/CsWebAppNoAuth)
 
 ## Features
 
@@ -12,7 +14,8 @@ This ASP.NET Core web application demonstrates integration with PostgreSQL datab
 
 - .NET 10.0 SDK
 - PostgreSQL database
-- Docker (optional, for easy PostgreSQL setup)
+- Docker - optional
+- Kubernetes/k3s - optional
 
 ## Setup Instructions
 
@@ -128,7 +131,3 @@ dotnet user-secrets set "Jwt:Key" "ThisYourSecretKeyForJWTAuthentication"
 
 - Bootstrap and jQuery are not loaded as dependencies
 - connection pool - replace DbContext with DbContextPool
-- logging in Kubernetes - loki ?
-- sign docs with CryptoPro 
-- kubernetes
-- local document storage integrated with metadata in db 
