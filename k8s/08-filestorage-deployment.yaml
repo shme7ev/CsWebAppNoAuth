@@ -17,7 +17,7 @@ spec:
     spec:
       containers:
       - name: filestorageservice
-        image: localhost:5000/filestorageservice:latest
+        image: localhost:5000/filestorageservice:dev-20260305-144647
         ports:
         - containerPort: 8080
         env:

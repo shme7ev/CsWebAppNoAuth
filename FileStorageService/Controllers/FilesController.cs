@@ -25,8 +25,7 @@ public class FilesController(IFileStorageService fileStorageService, ILogger<Fil
     /// Headers:
     ///     X-Uploaded-By: username (optional)
     /// </remarks>
-    /// <param name="file">The file to upload (max 100MB)</param>
-    /// <param name="description">Optional description of the file</param>
+    /// <param name="request">The file to upload (max 100MB) with Optional description of the file</param>
     /// <returns>File metadata including the assigned ID</returns>
     /// <response code="200">File uploaded successfully</response>
     /// <response code="400">Invalid file or request</response>
@@ -47,10 +46,7 @@ public class FilesController(IFileStorageService fileStorageService, ILogger<Fil
                 uploadedBy,
                 request.Description);
 
-            if (!success)
-            {
-                return BadRequest(new { Message = message });
-            }
+            if (!success) return BadRequest(new { Message = message });
 
             return Ok(new {
                 Message = message,
