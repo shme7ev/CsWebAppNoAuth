@@ -18,6 +18,9 @@ public class ProductServiceEF(ApplicationDbContext context) : IProductServiceEF
     {
         return await context.Products
             .OrderBy(p => p.Name)
+            /* for custom query, you can use
+             // .FromSql($@"SELECT * FROM products ORDER BY name")
+             */
             .ToListAsync();
     }
 
@@ -32,6 +35,9 @@ public class ProductServiceEF(ApplicationDbContext context) : IProductServiceEF
         return await context.Products
             .Where(p => p.Category == category)
             .OrderBy(p => p.Name)
+            /* for custom query, you can use
+            // .FromSql($@"SELECT * FROM products where products.category = {category} ORDER BY name")
+            */
             .ToListAsync();
     }
 
